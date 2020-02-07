@@ -1,3 +1,23 @@
+const url = "ws://localhost:8080/Othello/endpoint";
+const ws = new WebSocket(url);
+
+function send(cordinates){
+    ws.send(cordinates);
+    messageText.value="";
+}
+
+ws.addEventListener("message", event =>{
+    const data = JSON.parse(event.data);
+    const Cordinates = JSON.parse(data.message);
+    if(Array.isArray(data)){
+        const output = data.map(d=>d.username).join('\n');
+        users.value = output;
+    }else {
+    textarea.value += `${data.from}: ${data.message}\n`;
+    }
+    app.drawCirkle(Cordinates.column, Cordinates.row, data.from=== "Player1"? "black":"white");
+});
+// button.addEventListener('click',send);
 
 
 
@@ -33,10 +53,15 @@ class Application {
 
 
 
-        this.drawCirkle(4, 3, "black")
-        this.drawCirkle(4, 4, "white")
-        this.drawCirkle(3, 4, "black")
-        this.drawCirkle(3, 3, "white")
+        this.drawCirkle(4, 3,"white")
+        this.drawCirkle(4, 4,"black")
+        this.drawCirkle(3, 3,"black")
+        this.drawCirkle(3, 4,"white")
+
+        // this.drawCirkle(4, 3)
+        // this.drawCirkle(4, 4)
+        // this.drawCirkle(3, 3)  
+        // this.drawCirkle(3, 4)
 
 
         this.canvas.addEventListener('click', this.placeMarker.bind(this));
@@ -47,15 +72,29 @@ class Application {
         const mouseY = event.clientY - this.canvas.getBoundingClientRect().top;
         const column = Math.floor(mouseX / 237);
         const row = Math.floor(mouseY / 133);
+        const kordinater = {column, row};
+        const jsonData = JSON.stringify(kordinater);
         this.drawCirkle(column, row);
+        send(jsonData);
+                
     }
 
     drawCirkle(xpos, ypos, Bcolor) {
         this.ctx.beginPath();
         this.ctx.arc(this.Xled * xpos + this.Xcenter, this.Yled * ypos + this.Ycenter, this.Bsize, 0, Math.PI * 2, true);
         this.ctx.fillStyle = Bcolor;
+        this.changeColor();
         this.ctx.fill();
     }
+    
+    changeColor(){
+        if(this.Bcolor == "black"){
+            this.Bcolor = "white";
+        }else{
+            this.Bcolor = "black";
+        }
+    }
+    
 
 }
 
