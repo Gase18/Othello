@@ -1,4 +1,4 @@
-const url = "ws://localhost:8080/Othello/endpoint";
+const url = `ws://${location.host}/Othello/endpoint`;
 const ws = new WebSocket(url);
 
 function send(cordinates){
@@ -58,10 +58,6 @@ class Application {
         this.drawCirkle(3, 3,"black")
         this.drawCirkle(3, 4,"white")
 
-        // this.drawCirkle(4, 3)
-        // this.drawCirkle(4, 4)
-        // this.drawCirkle(3, 3)  
-        // this.drawCirkle(3, 4)
 
 
         this.canvas.addEventListener('click', this.placeMarker.bind(this));
@@ -83,18 +79,8 @@ class Application {
         this.ctx.beginPath();
         this.ctx.arc(this.Xled * xpos + this.Xcenter, this.Yled * ypos + this.Ycenter, this.Bsize, 0, Math.PI * 2, true);
         this.ctx.fillStyle = Bcolor;
-        this.changeColor();
         this.ctx.fill();
-    }
-    
-    changeColor(){
-        if(this.Bcolor == "black"){
-            this.Bcolor = "white";
-        }else{
-            this.Bcolor = "black";
-        }
-    }
-    
+    }  
 
 }
 
